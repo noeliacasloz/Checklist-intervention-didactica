@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist: Plan de Clase Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .checkbox-custom {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #9CA3AF;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .checkbox-custom:hover {
+            border-color: #6366F1;
+            transform: scale(1.05);
+        }
+        .checkbox-custom.checked {
+            background-color: #10B981;
+            border-color: #10B981;
+        }
+        .info-button {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen p-3 sm:p-4">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header con progreso -->
+        <div class="bg-white rounded-2xl shadow-2xl p-4 sm:p-8 mb-6">
+            <h1 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-3 text-center">
+                ✅ Checklist: Plan de Clase Completo
+            </h1>
+            <p class="text-center text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                Para tu intervención en la escuela primaria (11-29 de octubre)
+            </p>
+            
+            <!-- Instrucción para ver explicaciones -->
+            <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-4 mb-4">
+                <div class="flex items-start gap-2">
+                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-sm text-blue-900">
+                        <strong>💡 ¿Cómo usar este checklist?</strong><br>
+                        • Toca la <strong>casilla</strong> para marcar como completado<br>
+                        • Toca el botón <strong>ⓘ</strong> para ver explicación y ejemplo de cada criterio
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Barra de progreso -->
+            <div class="mb-4 sm:mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs sm:text-sm font-semibold text-gray-700">Tu progreso:</span>
+                    <span class="text-xl sm:text-2xl font-bold text-indigo-600" id="progreso-texto">0/24</span>
+                </div>
+                <div class="h-5 sm:h-6 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="barra-progreso" class="h-full transition-all duration-500 bg-blue-500" style="width: 0%"></div>
+                </div>
+                <p class="text-center mt-2 text-sm sm:text-base text-gray-600 font-medium" id="porcentaje-texto">0% completado</p>
+            </div>
+
+            <!-- Mensaje motivacional -->
+            <div id="mensaje-completo" class="hidden bg-green-50 border-2 border-green-400 rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-4">
+                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h3 class="text-lg sm:text-xl font-bold text-green-800">¡Plan completo! 🎉</h3>
+                    <p class="text-sm sm:text-base text-green-700">Tu plan de clase tiene todos los elementos necesarios. ¡Excelente trabajo!</p>
+                </div>
+            </div>
+
+            <!-- Botón reiniciar -->
+            <div class="mt-4 sm:mt-6">
+                <button onclick="reiniciar()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-300 transition flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Reiniciar Checklist
+                </button>
+            </div>
+        </div>
+
+        <!-- Secciones del checklist -->
+        <div class="space-y-4 sm:space-y-6" id="secciones-container">
+            <!-- Las secciones se generarán dinámicamente -->
+        </div>
+
+        <!-- Tips finales -->
+        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 border-4 border-yellow-400 rounded-2xl p-4 sm:p-8 mt-6 sm:mt-8">
+            <div class="flex items-start gap-3 sm:gap-4">
+                <svg class="w-6 h-6 sm:w-8 sm:h-8 text-yellow-700 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">
+                        💡 Consejos para tu Intervención
+                    </h3>
+                    <ul class="space-y-2 text-sm sm:text-base text-gray-800">
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-600 font-bold flex-shrink-0">•</span>
+                            <span><strong>Antes de ir:</strong> Revisa tu checklist y lleva todo impreso (plan + instrumentos + materiales)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-600 font-bold flex-shrink-0">•</span>
+                            <span><strong>Flexibilidad:</strong> Aunque planees 50 min, prepara actividades extra por si hay tiempo</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-600 font-bold flex-shrink-0">•</span>
+                            <span><strong>Durante la clase:</strong> Ten tu plan visible y marca qué vas completando</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-600 font-bold flex-shrink-0">•</span>
+                            <span><strong>Después:</strong> Anota qué funcionó y qué cambiarías para tu reporte de intervención</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6 pb-6">
+            <p class="text-xs sm:text-sm text-gray-500">
+                Material didáctico digital para la Profesora Mónica Leticia López Chacón<br>
+                Didáctica General - BENF
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Datos del checklist
+        const secciones = {
+            datosGenerales: {
+                titulo: "📋 DATOS GENERALES",
+                color: "blue",
+                elementos: [
+                    {
+                        id: "escuela",
+                        texto: "Nombre de la escuela y grado",
+                        explicacion: "Escuela primaria donde realizarás la intervención y grado específico (ej: 3° A)",
+                        ejemplo: "Escuela Primaria 'Benito Juárez' - 3° grado grupo A"
+                    },
+                    {
+                        id: "asignatura",
+                        texto: "Asignatura y bloque/unidad",
+                        explicacion: "Materia que vas a impartir y el bloque o unidad temática correspondiente",
+                        ejemplo: "Matemáticas - Bloque II: Números y operaciones"
+                    },
+                    {
+                        id: "fecha",
+                        texto: "Fecha y duración de la sesión",
+                        explicacion: "Día en que impartirás la clase y tiempo total (generalmente 50-60 minutos)",
+                        ejemplo: "15 de octubre de 2024 - Duración: 50 minutos"
+                    },
+                    {
+                        id: "proposito",
+                        texto: "Propósito/Aprendizaje esperado del programa",
+                        explicacion: "Copia textual del programa oficial de estudios (SEP) el aprendizaje esperado que trabajarás",
+                        ejemplo: "Que los alumnos resuelvan problemas de suma y resta con números de hasta tres cifras"
+                    }
+                ]
+            },
+            competencia: {
+                titulo: "🎯 COMPETENCIA",
+                color: "purple",
+                elementos: [
+                    {
+                        id: "competenciaRedactada",
+                        texto: "Competencia bien redactada",
+                        explicacion: "Debe incluir: VERBO observable + CONTENIDO específico + FINALIDAD + CONTEXTO",
+                        ejemplo: "Resuelve problemas matemáticos de suma y resta con números de tres cifras utilizando estrategias propias para aplicarlas en situaciones cotidianas del aula"
+                    },
+                    {
+                        id: "competenciaObservable",
+                        texto: "El verbo es observable y medible",
+                        explicacion: "Evita verbos como 'conocer', 'aprender', 'saber'. Usa: identifica, resuelve, explica, analiza, etc.",
+                        ejemplo: "✓ 'Identifica' en lugar de ✗ 'Conoce'"
+                    }
+                ]
+            },
+            secuenciaDidactica: {
+                titulo: "📖 SECUENCIA DIDÁCTICA",
+                color: "green",
+                elementos: [
+                    {
+                        id: "inicio",
+                        texto: "INICIO: Actividades de apertura (10-15 min)",
+                        explicacion: "Activación de conocimientos previos, motivación, presentación del tema y propósito",
+                        ejemplo: "Se preguntará: '¿Recuerdan cómo sumamos números de dos cifras?' Se anotarán respuestas en el pizarrón. Luego se presentará un problema cotidiano: 'Si tengo $125 y gano $237...' Tiempo: 10 min"
+                    },
+                    {
+                        id: "desarrollo",
+                        texto: "DESARROLLO: Actividades principales (25-30 min)",
+                        explicacion: "Presentación del contenido, práctica guiada, trabajo individual/equipos. Incluye qué hace el docente Y qué hacen los alumnos",
+                        ejemplo: "1) Modelado: La docente resolverá un problema en el pizarrón explicando cada paso (10 min). 2) Práctica guiada: En parejas resolverán 3 problemas con apoyo (10 min). 3) Trabajo individual: Cada alumno resuelve 2 problemas en su cuaderno (10 min)"
+                    },
+                    {
+                        id: "cierre",
+                        texto: "CIERRE: Actividades de conclusión (5-10 min)",
+                        explicacion: "Síntesis, reflexión, evaluación formativa, retroalimentación",
+                        ejemplo: "Se pedirá a 3 voluntarios que expliquen cómo resolvieron un problema. Se hará una conclusión grupal sobre las estrategias más útiles. Se dejará tarea de refuerzo (5 min)"
+                    },
+                    {
+                        id: "descripcionDetallada",
+                        texto: "Las actividades están descritas detalladamente",
+                        explicacion: "Cada actividad responde: ¿Qué harán? ¿Cómo? ¿Con qué materiales? ¿En cuánto tiempo? ¿Qué hace el docente?",
+                        ejemplo: "Suficiente detalle para que otro docente pueda replicar tu clase sin preguntarte"
+                    },
+                    {
+                        id: "tiempos",
+                        texto: "Incluye tiempos estimados por actividad",
+                        explicacion: "Calcula cuántos minutos tomará cada parte y asegúrate que sume 50-60 minutos totales",
+                        ejemplo: "Inicio: 10 min | Desarrollo: 30 min (10+10+10) | Cierre: 10 min = 50 min total"
+                    }
+                ]
+            },
+            evaluacion: {
+                titulo: "✅ EVALUACIÓN",
+                color: "red",
+                elementos: [
+                    {
+                        id: "instrumentos",
+                        texto: "Instrumentos de evaluación definidos",
+                        explicacion: "Rúbrica, lista de cotejo, escala estimativa, registro anecdótico, etc.",
+                        ejemplo: "Lista de cotejo con 5 criterios: 1) Identifica datos, 2) Selecciona operación correcta, 3) Realiza procedimiento, 4) Obtiene resultado correcto, 5) Verifica su respuesta"
+                    },
+                    {
+                        id: "criterios",
+                        texto: "Criterios de evaluación claros",
+                        explicacion: "Qué vas a evaluar específicamente y cómo se considera logrado",
+                        ejemplo: "Se evaluará si el alumno: resuelve correctamente 7 de 10 problemas, explica su procedimiento de forma clara, utiliza al menos 2 estrategias diferentes"
+                    },
+                    {
+                        id: "anexoInstrumento",
+                        texto: "Instrumento anexado al plan",
+                        explicacion: "El formato completo de tu rúbrica, lista de cotejo o instrumento elegido debe estar incluido",
+                        ejemplo: "Anexo 1: Lista de cotejo para resolución de problemas (ver página 5)"
+                    }
+                ]
+            },
+            materialesRecursos: {
+                titulo: "📦 MATERIALES Y RECURSOS",
+                color: "orange",
+                elementos: [
+                    {
+                        id: "listaMateriales",
+                        texto: "Lista de materiales didácticos",
+                        explicacion: "Objetos creados específicamente para enseñar (fichas, tarjetas, láminas, presentaciones)",
+                        ejemplo: "- 30 tarjetas con problemas matemáticos (elaboradas en cartulina)\n- Presentación digital con ejemplos (PPT, 5 slides)\n- Hojas de ejercicios (20 copias)"
+                    },
+                    {
+                        id: "listaRecursos",
+                        texto: "Lista de recursos didácticos",
+                        explicacion: "Todo lo demás: espacios, tecnología, objetos no creados por ti, personas",
+                        ejemplo: "- Proyector y computadora\n- Pizarrón blanco y marcadores\n- Cuadernos y lápices de los alumnos\n- Aula organizada en equipos\n- Reloj de pared para control de tiempo"
+                    },
+                    {
+                        id: "diferenciacion",
+                        texto: "Diferencia entre materiales y recursos",
+                        explicacion: "Materiales: hechos para enseñar | Recursos: elementos de apoyo (pueden no ser educativos originalmente)",
+                        ejemplo: "Material: Tarjetas con multiplicaciones | Recurso: Calculadora del salón"
+                    }
+                ]
+            },
+            estrategiasTecnicas: {
+                titulo: "🎯 ESTRATEGIAS Y TÉCNICAS",
+                color: "indigo",
+                elementos: [
+                    {
+                        id: "estrategiaDefinida",
+                        texto: "Estrategia(s) didáctica(s) identificada(s)",
+                        explicacion: "El enfoque general: Aprendizaje colaborativo, ABP, gamificación, aprendizaje por descubrimiento, etc.",
+                        ejemplo: "Estrategia: Aprendizaje Basado en Problemas (presentar situaciones reales para resolver)"
+                    },
+                    {
+                        id: "tecnicasEspecificas",
+                        texto: "Técnicas específicas mencionadas",
+                        explicacion: "Procedimientos concretos: lluvia de ideas, mesa redonda, modelado, think-pair-share, etc.",
+                        ejemplo: "Técnicas utilizadas:\n- Modelado (docente resuelve ejemplo)\n- Trabajo en parejas (think-pair-share)\n- Resolución de problemas paso a paso"
+                    },
+                    {
+                        id: "diferenciaClara",
+                        texto: "Diferencias claramente estrategias de técnicas",
+                        explicacion: "Estrategia = plan general | Técnica = procedimiento específico dentro de la estrategia",
+                        ejemplo: "La estrategia 'Aprendizaje colaborativo' incluye las técnicas 'trabajo en equipos' y 'coevaluación entre pares'"
+                    }
+                ]
+            },
+            formatoGeneral: {
+                titulo: "📄 FORMATO Y PRESENTACIÓN",
+                color: "gray",
+                elementos: [
+                    {
+                        id: "encabezado",
+                        texto: "Encabezado completo (institución, nombre, fecha)",
+                        explicacion: "Datos de identificación: tu universidad, tu nombre completo, materia, fecha de elaboración",
+                        ejemplo: "BENEMÉRITA ESCUELA NORMAL URBANA FEDERAL\nDidáctica General\nProf. Mónica Leticia López Chacón\nAlumno: [Tu nombre]\nFecha: 10 de octubre de 2024"
+                    },
+                    {
+                        id: "ortografia",
+                        texto: "Revisión de ortografía y redacción",
+                        explicacion: "Sin faltas de ortografía, acentos correctos, redacción clara y coherente",
+                        ejemplo: "Usar corrector ortográfico y pedir a alguien más que revise antes de entregar"
+                    },
+                    {
+                        id: "formato",
+                        texto: "Formato organizado y legible",
+                        explicacion: "Títulos claros, espaciado adecuado, uso de viñetas o numeración, secciones bien diferenciadas",
+                        ejemplo: "Usar negritas para títulos, espacios entre secciones, numeración para actividades secuenciales"
+                    },
+                    {
+                        id: "anexos",
+                        texto: "Anexos incluidos (instrumentos, materiales)",
+                        explicacion: "Todo lo que mencionas en el plan debe estar adjunto: instrumentos de evaluación, ejemplos de materiales",
+                        ejemplo: "Anexo 1: Lista de cotejo\nAnexo 2: Ejemplo de tarjetas didácticas\nAnexo 3: Ejercicios para los alumnos"
+                    }
+                ]
+            }
+        };
+
+        // Estado
+        let elementosCompletados = {};
+
+        // Inicializar
+        function inicializar() {
+            renderizarSecciones();
+            actualizarProgreso();
+        }
+
+        // Renderizar secciones
+        function renderizarSecciones() {
+            const container = document.getElementById('secciones-container');
+            container.innerHTML = '';
+
+            Object.entries(secciones).forEach(([seccionId, seccion]) => {
+                const seccionHTML = `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="bg-${seccion.color}-100 border-b-4 border-${seccion.color}-400 p-4 sm:p-6">
+                            <h2 class="text-lg sm:text-2xl font-bold text-${seccion.color}-900">${seccion.titulo}</h2>
+                        </div>
+                        <div class="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                            ${seccion.elementos.map(elemento => crearElementoHTML(seccionId, elemento, seccion.color)).join('')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += seccionHTML;
+            });
+        }
+
+        // Crear HTML de elemento
+        function crearElementoHTML(seccionId, elemento, color) {
+            const key = `${seccionId}-${elemento.id}`;
+            const isChecked = elementosCompletados[key] || false;
+
+            return `
+                <div class="border-2 border-gray-200 rounded-xl p-3 sm:p-4 hover:border-gray-300 transition">
+                    <div class="flex items-start gap-3 sm:gap-4">
+                        <button onclick="toggleElemento('${key}')" class="flex-shrink-0 mt-1">
+                            <div class="checkbox-custom ${isChecked ? 'checked' : ''}">
+                                ${isChecked ? `
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                ` : ''}
+                            </div>
+                        </button>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-2 sm:gap-4">
+                                <p class="font-semibold text-sm sm:text-base ${isChecked ? 'text-green-700 line-through' : 'text-gray-800'}">
+                                    ${elemento.texto}
+                                </p>
+                                <button onclick="toggleInfo('${key}')" class="info-button flex-shrink-0 p-1.5 sm:p-2 rounded-lg transition bg-gray-100 hover:bg-blue-100 active:bg-blue-200">
+                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="info-${key}" class="hidden mt-3 sm:mt-4 bg-blue-50 border-l-4 border-blue-400 p-3 sm:p-4 rounded animate-fadeIn">
+                                <p class="text-xs sm:text-sm text-blue-900 mb-2 sm:mb-3">
+                                    <strong>📝 Explicación:</strong><br>
+                                    ${elemento.explicacion}
+                                </p>
+                                <p class="text-xs sm:text-sm text-blue-800 bg-white p-2 sm:p-3 rounded">
+                                    <strong>💡 Ejemplo:</strong><br>
+                                    ${elemento.ejemplo.replace(/\n/g, '<br>')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle elemento
+        function toggleElemento(key) {
+            elementosCompletados[key] = !elementosCompletados[key];
+            renderizarSecciones();
+            actualizarProgreso();
+        }
+
+        // Toggle info
+        function toggleInfo(key) {
+            const infoDiv = document.getElementById(`info-${key}`);
+            if (infoDiv) {
+                infoDiv.classList.toggle('hidden');
+            }
+        }
+
+        // Actualizar progreso
+        function actualizarProgreso() {
+            let total = 0;
+            let completados = 0;
+
+            Object.values(secciones).forEach(seccion => {
+                total += seccion.elementos.length;
+            });
+
+            completados = Object.values(elementosCompletados).filter(v => v).length;
+            const porcentaje = Math.round((completados / total) * 100);
+
+            document.getElementById('progreso-texto').textContent = `${completados}/${total}`;
+            document.getElementById('porcentaje-texto').textContent = `${porcentaje}% completado`;
+            
+            const barra = document.getElementById('barra-progreso');
+            barra.style.width = `${porcentaje}%`;
+            
+            if (porcentaje === 100) {
+                barra.className = 'h-full transition-all duration-500 bg-green-500';
+                document.getElementById('mensaje-completo').classList.remove('hidden');
+            } else if (porcentaje >= 75) {
+                barra.className = 'h-full transition-all duration-500 bg-blue-500';
+                document.getElementById('mensaje-completo').classList.add('hidden');
+            } else if (porcentaje >= 50) {
+                barra.className = 'h-full transition-all duration-500 bg-yellow-500';
+                document.getElementById('mensaje-completo').classList.add('hidden');
+            } else {
+                barra.className = 'h-full transition-all duration-500 bg-red-500';
+                document.getElementById('mensaje-completo').classList.add('hidden');
+            }
+        }
+
+        // Reiniciar
+        function reiniciar() {
+            if (confirm('¿Estás seguro de que quieres reiniciar el checklist? Se perderá todo el progreso.')) {
+                elementosCompletados = {};
+                renderizarSecciones();
+                actualizarProgreso();
+            }
+        }
+
+        // Iniciar cuando cargue la página
+        window.onload = inicializar;
+    </script>
+</body>
+</html>
